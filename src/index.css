@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@layer components {
+  .d-1 {
+    @apply relative max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+  .d-2 {
+    @apply absolute top-0 left-0 h-full max-w-[100%] overflow-auto bg-white/90 p-4 text-center whitespace-normal;
+  }
+}

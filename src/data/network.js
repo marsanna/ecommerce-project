@@ -7,7 +7,7 @@ export async function fetchProducts() {
       return res.json();
     });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 

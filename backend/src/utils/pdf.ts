@@ -13,7 +13,6 @@ export function generateOrderPDF(
     return sum + item.price * item.quantity;
   }, 0);
 
-  // A4-Format festlegen
   const doc = new PDFDocument({ margin: 50, size: "A4" });
 
   res.setHeader("Content-Type", "application/pdf");

@@ -1,0 +1,70 @@
+{
+  "name": "express-ts-template",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "type": "module",
+  "imports": {
+    "#controllers": {
+      "development": "./src/controllers/index.ts",
+      "default": "./dist/controllers/index.js"
+    },
+    "#middlewares": {
+      "development": "./src/middlewares/index.ts",
+      "default": "./dist/middlewares/index.js"
+    },
+    "#models": {
+      "development": "./src/models/index.ts",
+      "default": "./dist/models/index.js"
+    },
+    "#routes": {
+      "development": "./src/routes/index.ts",
+      "default": "./dist/routes/index.js"
+    },
+    "#schemas": {
+      "development": "./src/schemas/index.ts",
+      "default": "./dist/schemas/index.js"
+    },
+    "#db": {
+      "development": "./src/db/index.ts",
+      "default": "./dist/db/index.js"
+    },
+    "#config": {
+      "development": "./src/config/index.ts",
+      "default": "./dist/config/index.js"
+    },
+    "#utils": {
+      "development": "./src/utils/index.ts",
+      "default": "./dist/utils/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "node --watch --conditions development --experimental-transform-types --disable-warning=ExperimentalWarning --env-file=.env.development.local src/app.ts",
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node --env-file=.env.production.local dist/app.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.5",
+    "pdfkit": "^0.17.2"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.1.0",
+    "@types/pdfkit": "^0.17.4",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "^5.8.3",
+    "zod": "^4.0.10"
+  }
+}

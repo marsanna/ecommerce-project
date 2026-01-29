@@ -1,0 +1,11 @@
+function Footer() {
+  return (
+    <footer className="mt-10 bg-gray-900 py-10 text-gray-300">
+      <div className="text-center text-sm text-gray-500">
+        © 2026 Unternehmen. Alle Rechte vorbehalten.
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;

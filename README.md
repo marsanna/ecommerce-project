@@ -41,4 +41,4 @@ It showcases a dynamic product catalog using data from the Fake Store API, featu
 
 ## 📌 Notes
 
-This project was created for learning and demonstration purposes, focusing on the synergy between a modern React frontend and a structured Node.js backend.
+This project was created for learning and demonstration purposes.

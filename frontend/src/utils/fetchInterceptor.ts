@@ -1,5 +1,5 @@
 const originalFetch = fetch;
-const authServiceURL = import.meta.env.APP_SERVER_URL;
+const authServiceURL = import.meta.env.VITE_APP_SERVER_URL;
 
 window.fetch = async (url, options = {}, ...rest) => {
   const isInternalRequest = url.toString().includes(authServiceURL);

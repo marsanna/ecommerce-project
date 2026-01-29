@@ -110,8 +110,14 @@ export const logout: RequestHandler = async (req, res) => {
     await RefreshToken.findOneAndDelete({ token: refreshToken });
   }
 
-  res.clearCookie("refreshToken");
-  res.clearCookie("accessToken");
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none" as const,
+  };
+
+  res.clearCookie("refreshToken", cookieOptions);
+  res.clearCookie("accessToken", cookieOptions);
 
   res.status(200).json({ message: "Logged out" });
 };

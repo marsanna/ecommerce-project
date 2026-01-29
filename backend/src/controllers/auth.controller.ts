@@ -28,7 +28,7 @@ export const register: RequestHandler = async (req, res) => {
   const { firstName, lastName, email, password, roles } = req.body;
   const userExists = await User.exists({ email });
   if (userExists)
-    throw new Error("Email already exists", { cause: { status: 400 } });
+    throw new Error("Email already exists.", { cause: { status: 400 } });
 
   const hashedPassword = await hashPassword(password);
 
@@ -83,7 +83,7 @@ export const refresh: RequestHandler = async (req, res) => {
 
   const storedToken = await RefreshToken.findOne({ token: refreshToken });
   if (!storedToken)
-    throw new Error("Refresh token not found", {
+    throw new Error("Refresh token not found.", {
       cause: { status: 401 },
     });
 
@@ -126,7 +126,7 @@ export const me: RequestHandler = async (req, res, next) => {
   const { accessToken } = req.cookies;
 
   if (!accessToken)
-    throw new Error("Acces token is required", {
+    throw new Error("Access token is required.", {
       cause: { status: 401 },
     });
 

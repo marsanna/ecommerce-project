@@ -23,7 +23,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     res.status(500).json(payload);
   }
 
-  res.status(500).json({ message: "Interal server error" });
+  res.status(500).json({ message: "Internal server error" });
   return;
 };
 

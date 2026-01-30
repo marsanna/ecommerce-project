@@ -1,5 +1,6 @@
 import { ACCESS_JWT_SECRET, REFRESH_TOKEN_TTL } from "#config";
 import { RefreshToken, User } from "#models";
+import { loginSchema, registerSchema } from "#schemas";
 import { createAccessToken, createRefreshToken, hashPassword } from "#utils";
 import bcrypt from "bcrypt";
 import type { RequestHandler, Response } from "express";
@@ -25,7 +26,9 @@ function setAuthCookies(
 }
 
 export const register: RequestHandler = async (req, res) => {
-  const { firstName, lastName, email, password, roles } = req.body;
+  const validatedData = registerSchema.parse(req.body);
+  const { email, password, firstName, lastName, roles } = validatedData;
+
   const userExists = await User.exists({ email });
   if (userExists)
     throw new Error("Email already exists.", { cause: { status: 400 } });
@@ -53,7 +56,7 @@ export const register: RequestHandler = async (req, res) => {
 };
 
 export const login: RequestHandler = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = loginSchema.parse(req.body);
 
   const user = await User.findOne({ email }).select("+password");
   if (!user) throw new Error(" User not found", { cause: { status: 404 } });

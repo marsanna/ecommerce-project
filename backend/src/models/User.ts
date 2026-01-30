@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { type InferSchemaType, Schema, model } from "mongoose";
 
 import { cleanResponse } from "../db/mongoose.plugins.ts";
 
@@ -40,6 +40,7 @@ const userSchema = new Schema(
 
 userSchema.plugin(cleanResponse);
 
-const User = model("User", userSchema);
+export type UserDoc = InferSchemaType<typeof userSchema>;
+const User = model<UserDoc>("User", userSchema);
 
 export default User;

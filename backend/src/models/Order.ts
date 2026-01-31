@@ -24,6 +24,8 @@ const orderItemSchema = new Schema({
   },
 });
 
+orderItemSchema.plugin(cleanResponse);
+
 const orderSchema = new Schema(
   {
     userId: {

@@ -8,6 +8,57 @@ const basePasswordSchema = z
   .min(12, { error: "Password must be at least 12 characters." })
   .max(512, { error: "The length of this password is excessive." });
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     RegisterInput:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "user@example.com"
+ *           description: User email address
+ *         password:
+ *           type: string
+ *           format: password
+ *           minLength: 12
+ *           example: "StrongP@ssw0rd!"
+ *           description: >
+ *             Password must be at least 12 characters long and include
+ *             uppercase, lowercase, number and special character.
+ *         confirmPassword:
+ *           type: string
+ *           format: password
+ *           example: "StrongP@ssw0rd!"
+ *           description: Must match the password
+ *         firstName:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 50
+ *           example: "Max"
+ *           description: User first name
+ *         lastName:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 50
+ *           example: "Mustermann"
+ *           description: User last name
+ *         roles:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["user"]
+ *           description: Optional list of user roles
+ *       required:
+ *         - email
+ *         - password
+ *         - confirmPassword
+ *         - firstName
+ *         - lastName
+ */
+
 export const registerSchema = z
   .strictObject(
     {
@@ -24,8 +75,8 @@ export const registerSchema = z
           error: "Password must include at least one special character.",
         }),
       confirmPassword: z.string(),
-      firstName: z.string().min(1).max(50).optional(),
-      lastName: z.string().min(1).max(50).optional(),
+      firstName: z.string().min(1).max(50),
+      lastName: z.string().min(1).max(50),
       roles: z.array(z.string()).optional(),
     },
     { error: "Please provide a valid email and a secure password." },
@@ -33,6 +84,29 @@ export const registerSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     error: "Passwords don't match.",
   });
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     LoginInput:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "user@example.com"
+ *           description: User email address
+ *         password:
+ *           type: string
+ *           format: password
+ *           minLength: 12
+ *           example: "StrongP@ssw0rd!"
+ *           description: User password
+ *       required:
+ *         - email
+ *         - password
+ */
 
 export const loginSchema = z.object({
   email: emailSchema,

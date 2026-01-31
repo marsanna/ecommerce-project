@@ -25,6 +25,39 @@ function setAuthCookies(
   });
 }
 
+/**
+ * @openapi
+ * /auth/register:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     description: Register a new user and set auth cookies
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterInput'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         headers:
+ *           Set-Cookie:
+ *             description: Access and refresh tokens as httpOnly cookies
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Registered
+ *       400:
+ *         description: Email already exists or validation error
+ */
+
 export const register: RequestHandler = async (req, res) => {
   const validatedData = registerSchema.parse(req.body);
   const { email, password, firstName, lastName, roles } = validatedData;
@@ -55,6 +88,41 @@ export const register: RequestHandler = async (req, res) => {
   res.status(201).json({ message: "Registered" });
 };
 
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     description: Login user and set auth cookies
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginInput'
+ *     responses:
+ *       200:
+ *         description: Logged in successfully
+ *         headers:
+ *           Set-Cookie:
+ *             description: Access and refresh tokens as httpOnly cookies
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logged in
+ *       401:
+ *         description: Incorrect credentials
+ *       404:
+ *         description: User not found
+ */
+
 export const login: RequestHandler = async (req, res) => {
   const { email, password } = loginSchema.parse(req.body);
 
@@ -75,6 +143,35 @@ export const login: RequestHandler = async (req, res) => {
 
   res.status(200).json({ message: "Logged in" });
 };
+
+/**
+ * @openapi
+ * /auth/refresh:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     description: Refresh access token using refresh token cookie
+ *     responses:
+ *       200:
+ *         description: Tokens refreshed successfully
+ *         headers:
+ *           Set-Cookie:
+ *             description: New access and refresh tokens
+ *             schema:
+ *               type: string
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Refreshed
+ *       401:
+ *         description: Refresh token missing, invalid or expired
+ *       404:
+ *         description: User not found
+ */
 
 export const refresh: RequestHandler = async (req, res) => {
   const { refreshToken } = req.cookies;
@@ -106,6 +203,26 @@ export const refresh: RequestHandler = async (req, res) => {
   res.status(200).json({ message: "Refreshed" });
 };
 
+/**
+ * @openapi
+ * /auth/logout:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     description: Logout user and clear auth cookies
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logged out
+ */
+
 export const logout: RequestHandler = async (req, res) => {
   const { refreshToken } = req.cookies;
 
@@ -124,6 +241,32 @@ export const logout: RequestHandler = async (req, res) => {
 
   res.status(200).json({ message: "Logged out" });
 };
+
+/**
+ * @openapi
+ * /auth/me:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     description: Get current authenticated user from access token cookie
+ *     responses:
+ *       200:
+ *         description: Valid access token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Valid token
+ *                 user:
+ *                   $ref: '#/components/schemas/UserOutput'
+ *       401:
+ *         description: Missing, invalid or expired access token
+ *       404:
+ *         description: User not found
+ */
 
 export const me: RequestHandler = async (req, res, next) => {
   const { accessToken } = req.cookies;

@@ -17,9 +17,11 @@
     /* Node Stuff */
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
-    "module": "preserve",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noEmit": false,
     "outDir": "dist",
+    "rootDir": "src",
     /* Paths */
     "baseUrl": "./src",
     "paths": {

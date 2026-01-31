@@ -13,10 +13,54 @@ function computeTotal(items: OrderItemDTO[]): number {
   }, 0);
 }
 
+/**
+ * @openapi
+ * /orders:
+ *   get:
+ *     tags:
+ *       - Orders
+ *     description: Get all orders sorted by creation date (descending)
+ *     responses:
+ *       200:
+ *         description: List of orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/OrderOutput'
+ */
+
 export const getOrders: RequestHandler = async (req, res) => {
   const orders = await Order.find().sort({ createdAt: -1 });
   res.json(orders);
 };
+
+/**
+ * @openapi
+ * /orders:
+ *   post:
+ *     tags:
+ *       - Orders
+ *     description: Create a new order
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/OrderInput'
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/OrderOutput'
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: User not found
+ */
 
 export const createOrder: RequestHandler<{}, any, OrderInputDTO> = async (
   req,
@@ -40,6 +84,32 @@ export const createOrder: RequestHandler<{}, any, OrderInputDTO> = async (
   res.status(201).json(order);
 };
 
+/**
+ * @openapi
+ * /orders/{id}:
+ *   get:
+ *     tags:
+ *       - Orders
+ *     description: Get a single order by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *         description: Order ID
+ *     responses:
+ *       200:
+ *         description: Order found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/OrderOutput'
+ *       404:
+ *         description: Order not found
+ */
+
 export const getOrderById: RequestHandler<{ id: string }> = async (
   req,
   res,
@@ -53,6 +123,37 @@ export const getOrderById: RequestHandler<{ id: string }> = async (
 
   res.json(order);
 };
+
+/**
+ * @openapi
+ * /orders/{id}:
+ *   put:
+ *     tags:
+ *       - Orders
+ *     description: Update an existing order
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/OrderInput'
+ *     responses:
+ *       200:
+ *         description: Order updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/OrderOutput'
+ *       404:
+ *         description: Order or user not found
+ */
 
 export const updateOrder: RequestHandler<
   { id: string },
@@ -81,6 +182,35 @@ export const updateOrder: RequestHandler<
   await order.save();
   res.json(order);
 };
+
+/**
+ * @openapi
+ * /orders/{id}:
+ *   delete:
+ *     tags:
+ *       - Orders
+ *     description: Delete an order by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: ObjectId
+ *     responses:
+ *       200:
+ *         description: Order deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Order deleted"
+ *       404:
+ *         description: Order not found
+ */
 
 export const deleteOrder: RequestHandler<{ id: string }> = async (req, res) => {
   const {

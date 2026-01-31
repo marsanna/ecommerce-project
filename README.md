@@ -39,6 +39,11 @@ It showcases a dynamic product catalog using data from the Fake Store API, featu
 
 🔗 [https://ecommerce-project-5rfy.onrender.com/](https://ecommerce-project-5rfy.onrender.com/)
 
+## 📖 Swagger API Documentation
+
+🔗 [https://ecommerce-project-b.onrender.com/docs/](https://ecommerce-project-b.onrender.com/docs/)
+🔗 [https://ecommerce-project-b.onrender.com/docs/openapi.json](https://ecommerce-project-b.onrender.com/docs/openapi.json)
+
 ## 📌 Notes
 
 This project was created for learning and demonstration purposes.

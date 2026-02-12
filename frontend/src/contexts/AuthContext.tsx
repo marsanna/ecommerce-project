@@ -1,6 +1,8 @@
 import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
+import type { User } from "../types.ts";
+
 type AuthContextType = {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;

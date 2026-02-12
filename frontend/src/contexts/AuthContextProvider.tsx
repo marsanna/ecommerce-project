@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import { getMe, refresh } from "../data/auth";
+import type { User } from "../types.ts";
 import { AuthContext } from "./AuthContext";
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {

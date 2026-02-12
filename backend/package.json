@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-    "dev": "node --watch --conditions development --experimental-transform-types --disable-warning=ExperimentalWarning --env-file=.env.development.local src/app.ts",
+    "dev": "node --watch --conditions development --env-file=.env.development.local src/app.ts",
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "prestart": "npm run build",
@@ -52,6 +52,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.5",
     "pdfkit": "^0.17.2",
+    "resend": "^6.9.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },

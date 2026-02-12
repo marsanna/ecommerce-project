@@ -1,3 +1,4 @@
+import type { User } from "../types.ts";
 import { authServiceURL } from "../utils/fetchInterceptor";
 
 export async function register(

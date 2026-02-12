@@ -37,7 +37,6 @@ const Register = () => {
       if (password !== confirmPassword)
         throw new Error("Passwords do not match");
       setLoading(true);
-      console.log(firstName, lastName, email, password, confirmPassword);
       await register({
         firstName,
         lastName,
@@ -181,7 +180,7 @@ const Register = () => {
         </small>
 
         <button
-          className="mt-2 self-center rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white shadow-md transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+          className="mt-2 cursor-pointer self-center rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white shadow-md transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           disabled={loading}
         >
           Sign up

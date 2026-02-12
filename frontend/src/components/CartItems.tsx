@@ -22,7 +22,7 @@ const CartItems = () => {
       </>
     );
   } else {
-    return <div className="text-center">Ihr Warenkorb ist leer.</div>;
+    return <div className="text-center">Your shopping cart is empty.</div>;
   }
 };
 

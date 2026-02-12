@@ -1,7 +1,7 @@
 import { CLIENT_BASE_URL } from "#config";
 import "#db";
 import { errorHandler } from "#middlewares";
-import { authRouter, docsRouter, orderRouter } from "#routes";
+import { authRouter, contactRouter, docsRouter, orderRouter } from "#routes";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
@@ -25,6 +25,7 @@ app.get("/error", (req, res) => {
 
 app.use("/auth", authRouter);
 app.use("/orders", orderRouter);
+app.use("/contact", contactRouter);
 app.use("/docs", docsRouter);
 app.use("*splat", (req, res) => {
   res.status(404).json({ message: "Not found" });

@@ -26,7 +26,7 @@ function Header() {
     <header className="sticky top-0 z-5 bg-gray-900 text-white shadow-[0_10px_10px_rgba(255,255,255,0.25)]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="text-2xl font-bold">
-          Mein Shop
+          My Shop
         </Link>
         <nav className="hidden space-x-6 md:flex">
           {!user ? (
@@ -46,6 +46,9 @@ function Header() {
               Logout
             </button>
           )}
+          <Link to="/contact" className="transition hover:text-gray-300">
+            Contact
+          </Link>
         </nav>
         <div className="relative">
           <Link to="/cart">
@@ -54,7 +57,7 @@ function Header() {
               className="flex cursor-pointer items-center space-x-2 transition hover:text-gray-300"
             >
               <span className="text-xl">🛒</span>
-              <span>Warenkorb</span>
+              <span>Shopping Cart</span>
             </button>
             <span
               id="cart_counter"

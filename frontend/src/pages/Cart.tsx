@@ -59,9 +59,9 @@ function Cart() {
 
   return (
     <>
-      <h1 className="my-5 text-lg font-bold">Warenkorb</h1>
+      <h1 className="my-5 text-lg font-bold">Cart</h1>
       <CartItems />
-      {!user && (
+      {!user && cart.items.length > 0 && (
         <div className="mt-10 border-t pt-8 text-center">
           <h2 className="my-5 text-lg font-bold">Ready to checkout?</h2>
           <p className="mb-5">

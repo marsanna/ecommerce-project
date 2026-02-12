@@ -100,7 +100,7 @@ const Login = () => {
         </small>
 
         <button
-          className="mt-2 self-center rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+          className="mt-2 cursor-pointer self-center rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           disabled={loading}
         >
           Sign in

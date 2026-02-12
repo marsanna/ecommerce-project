@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import MainLayout from "./layouts/MainLayout.tsx";
 import Cart from "./pages/Cart.tsx";
 import Checkout from "./pages/Checkout.tsx";
+import Contact from "./pages/Contact.tsx";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
@@ -17,10 +18,11 @@ function App() {
               <Route index element={<Home />} />
               <Route path="cart" element={<Cart />} />
               <Route path="login" element={<Login />} />
+              <Route path="contact" element={<Contact />} />
               <Route path="register" element={<Register />} />
               <Route path="checkout/:id" element={<Checkout />} />
-              {/*<Route path="*" element={<NotFound />} />
-            <Route path="category/:slug" element={<CategoryPage />} />*/}
+              {/*<Route path="*" element={<NotFound />} />*/}
+              {/*<Route path="category/:slug" element={<CategoryPage />} />*/}
             </Route>
           </Routes>
         </BrowserRouter>

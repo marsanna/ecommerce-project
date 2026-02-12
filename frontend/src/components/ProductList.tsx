@@ -23,7 +23,7 @@ const ProductList = () => {
       </>
     );
   } else {
-    return <div className="text-center">Keine Produkte sind verfügbar.</div>;
+    return <div className="text-center">No products are available.</div>;
   }
 };
 

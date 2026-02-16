@@ -19,7 +19,8 @@ app.use(
   }),
 );
 
-app.use(express.json(), cookieParser());
+app.use(express.json());
+app.use(cookieParser());
 
 app.get("/error", (req, res) => {
   throw new Error("Something went wrong", { cause: { status: 418 } });

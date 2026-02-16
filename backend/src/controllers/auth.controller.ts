@@ -15,6 +15,7 @@ function setAuthCookies(
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    partitioned: true,
     maxAge: REFRESH_TOKEN_TTL * 1000,
   });
 
@@ -22,6 +23,7 @@ function setAuthCookies(
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    partitioned: true,
   });
 }
 
@@ -234,6 +236,7 @@ export const logout: RequestHandler = async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none" as const,
+    partitioned: true,
   };
 
   res.clearCookie("refreshToken", cookieOptions);

@@ -63,7 +63,7 @@ const Register = () => {
         className="mx-auto my-5 flex flex-col gap-3 md:w-1/2"
         onSubmit={handleSubmit}
       >
-        <div className="flex justify-between gap-2">
+        <div className="flex flex-col gap-3 md:flex-row md:gap-2">
           <label className="flex grow items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +121,7 @@ const Register = () => {
           />
         </label>
 
-        <div className="flex justify-between gap-2">
+        <div className="flex flex-col gap-3 md:flex-row md:gap-2">
           <label className="flex grow items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"

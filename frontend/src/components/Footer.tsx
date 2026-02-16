@@ -6,7 +6,7 @@ function Footer() {
       <Link to="/contact" className="transition hover:text-gray-400">
         Contact
       </Link>
-      <div className="text-center text-sm text-gray-500">
+      <div className="mt-5 text-center text-sm text-gray-500">
         © 2026 My Shop. All rights reserved.
       </div>
     </footer>

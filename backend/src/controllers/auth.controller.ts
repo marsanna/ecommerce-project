@@ -13,14 +13,14 @@ function setAuthCookies(
 ) {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none",
     maxAge: REFRESH_TOKEN_TTL * 1000,
   });
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none",
   });
 }
@@ -232,7 +232,7 @@ export const logout: RequestHandler = async (req, res) => {
 
   const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none" as const,
   };
 

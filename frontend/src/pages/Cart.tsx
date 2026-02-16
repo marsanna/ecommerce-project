@@ -67,7 +67,7 @@ function Cart() {
           <p className="mb-5">
             Please log in or create an account to complete your purchase.
           </p>
-          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+          <div className="flex flex-col justify-center gap-4 px-10 sm:flex-row">
             <Link
               to="/login"
               className="cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-700"
@@ -84,7 +84,7 @@ function Cart() {
         </div>
       )}
       {user && cart.items.length > 0 && (
-        <div className="mt-4 flex gap-4">
+        <div className="mt-5 flex gap-4">
           <button
             type="button"
             className="cursor-pointer rounded bg-red-500 px-4 py-2 text-white transition hover:bg-red-700"

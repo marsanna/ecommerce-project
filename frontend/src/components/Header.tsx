@@ -32,7 +32,7 @@ function Header() {
         </Link>
 
         <div className="flex items-center gap-4 md:gap-8">
-          <nav className="flex items-center space-x-3 text-sm font-medium md:space-x-6 md:text-base">
+          <nav className="flex items-center space-x-3 text-sm md:space-x-6 md:text-base">
             {!user ? (
               <>
                 <Link to="/login" className="transition hover:text-gray-400">

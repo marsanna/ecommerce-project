@@ -11,19 +11,21 @@ function setAuthCookies(
   accessToken: string,
   refreshToken: string,
 ) {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    partitioned: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "strict",
+    ...(isProduction ? { partitioned: true } : {}),
     maxAge: REFRESH_TOKEN_TTL * 1000,
   });
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    partitioned: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "strict",
+    ...(isProduction ? { partitioned: true } : {}),
   });
 }
 
@@ -232,11 +234,13 @@ export const logout: RequestHandler = async (req, res) => {
     await RefreshToken.findOneAndDelete({ token: refreshToken });
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   const cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none" as const,
-    partitioned: true,
+    secure: isProduction,
+    sameSite: isProduction ? ("none" as const) : ("strict" as const),
+    ...(isProduction ? { partitioned: true } : {}),
   };
 
   res.clearCookie("refreshToken", cookieOptions);

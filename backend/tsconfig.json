@@ -21,11 +21,10 @@
     "moduleResolution": "NodeNext",
     "noEmit": false,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "./src",
     /* Paths */
-    "baseUrl": "./src",
     "paths": {
-      "#*": ["*"]
+      "#*": ["./src/*"]
     }
   },
   "include": ["src"]

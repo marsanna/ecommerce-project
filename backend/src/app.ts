@@ -21,6 +21,10 @@ app.use(
 
 app.use(express.json(), cookieParser());
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.get("/error", (req, res) => {
   throw new Error("Something went wrong", { cause: { status: 418 } });
 });

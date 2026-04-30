@@ -38,11 +38,13 @@
     }
   },
   "scripts": {
-    "dev": "node --watch --conditions development --env-file=.env.development.local src/app.ts",
+    "dev:docker-dev": "node --watch --conditions development src/app.ts",
+    "dev": "node --watch --conditions development --env-file=.env.intern.local src/app.ts",
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node --env-file=.env.production.local dist/app.js"
+    "start:docker-prod": "node dist/app.js",
+    "start": "node --env-file=.env.intern.local dist/app.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

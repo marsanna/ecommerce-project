@@ -1,0 +1,59 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile.prod
+    container_name: shop-backend-prod1
+    image: shop-backend:prod1
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env.production.local
+    environment:
+      - NODE_ENV=production
+    security_opt:
+      - no-new-privileges=true
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      shop-network-prod1:
+        aliases:
+          - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.prod
+      args:
+        - VITE_APP_SERVER_URL=${VITE_APP_SERVER_URL}
+        - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+    container_name: shop-frontend-prod1
+    image: shop-frontend:prod1
+    restart: always
+    ports:
+      - "80:8080"
+    env_file:
+      - ./frontend/.env.production.local
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    security_opt:
+      - no-new-privileges=true
+    read_only: true
+    user: "101:101"
+    tmpfs:
+      - /tmp:uid=101,gid=101,mode=777
+      - /var/run:uid=101,gid=101,mode=777
+      - /var/log/nginx:uid=101,gid=101,mode=777
+      - /var/cache/nginx:uid=101,gid=101,mode=777
+    networks:
+      shop-network-prod1:
+        aliases:
+          - frontend
+
+networks:
+  shop-network-prod1:
+    driver: bridge

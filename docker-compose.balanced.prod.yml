@@ -1,0 +1,71 @@
+services:
+  backend-blue:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile.prod.balanced
+    restart: always
+    image: backend-blue:prod2
+    env_file:
+      - ./backend/.env.production.local
+    environment:
+      - VIRTUAL_HOST=backend
+      - NODE_ENV=production
+      - VIRTUAL_PORT=3000
+    security_opt:
+      - no-new-privileges=true
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      shop-network-prod2:
+        aliases:
+          - backend
+
+  backend-green:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile.prod.balanced
+    restart: always
+    image: backend-green:prod2
+    env_file:
+      - ./backend/.env.production.local
+    environment:
+      - VIRTUAL_HOST=backend
+      - NODE_ENV=production
+      - VIRTUAL_PORT=3000
+    security_opt:
+      - no-new-privileges=true
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      shop-network-prod2:
+        aliases:
+          - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.prod.balanced
+      args:
+        - VITE_APP_SERVER_URL=${VITE_APP_SERVER_URL}
+        - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+    container_name: shop-frontend-prod2
+    image: shop-frontend:prod2
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - DEFAULT_HOST=localhost
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - shop-network-prod2
+    tmpfs:
+      - /var/cache/nginx:mode=777
+      - /var/run:mode=777
+      - /tmp:mode=777
+
+networks:
+  shop-network-prod2:
+    driver: bridge

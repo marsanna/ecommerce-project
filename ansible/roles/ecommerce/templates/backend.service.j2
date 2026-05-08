@@ -1,0 +1,29 @@
+[Unit]
+Description=Node.js Ecommerce Backend
+After=network.target
+
+[Service]
+Type=simple
+User={{ web_user }}
+Group={{ web_user }}
+WorkingDirectory={{ backend_path }}
+
+ExecStart=/usr/bin/node {{ backend_path }}/dist/app.js
+
+Restart=always
+
+Environment=NODE_ENV=production
+Environment=PORT={{ backend_port }}
+
+Environment=ACCESS_JWT_SECRET={{ access_jwt_secret }}
+Environment=DB_NAME={{ db_name }}
+Environment=CLIENT_BASE_URL={{ client_base_url }}
+Environment=MONGO_URI={{ mongo_uri }}
+Environment=REFRESH_TOKEN_TTL={{ refresh_token_ttl }}
+Environment=SALT_ROUNDS={{ salt_rounds }}
+Environment=CONTACT_RECEIVER_EMAIL={{ contact_receiver_email }}
+Environment=RESEND_API_KEY={{ resend_api_key }}
+Environment=TURNSTILE_SECRET_KEY={{ turnstile_secret_key }}
+
+[Install]
+WantedBy=multi-user.target

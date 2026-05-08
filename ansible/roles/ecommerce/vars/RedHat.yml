@@ -1,0 +1,14 @@
+---
+node_repo_setup: "curl -sL https://rpm.nodesource.com/setup_20.x | bash -"
+
+needed_packages:
+  - nginx
+  - nodejs
+  - git
+  - rsync
+
+web_user: "nginx"
+
+nginx_symlink: ""
+nginx_conf_file: "/etc/nginx/conf.d/ecommerce.conf"
+nginx_default_conf: "/etc/nginx/conf.d/default.conf"

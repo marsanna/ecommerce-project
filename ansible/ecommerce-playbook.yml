@@ -1,0 +1,7 @@
+---
+- name: Deploy Ecommerce Fullstack App (Node.js & React)
+  hosts: web_servers
+  gather_facts: yes
+
+  roles:
+    - ecommerce

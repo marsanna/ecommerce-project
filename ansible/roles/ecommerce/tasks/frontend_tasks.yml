@@ -1,0 +1,82 @@
+---
+- name: Frontend implementation block
+  block:
+    # 5. Code transfer (Synchronize)
+    - name: Transfer frontend code
+      synchronize:
+        src: "{{ local_code_path }}/frontend/"
+        dest: "{{ frontend_path }}"
+        delete: yes
+        recursive: yes
+        rsync_opts:
+          - "--exclude=.gitignore"
+          - "--exclude=.prettierrc"
+          - "--exclude=.env*"
+          - "--exclude=.git"
+          - "--exclude=.dockerignore"
+          - "--exclude=node_modules"
+          - "--exclude=dist"
+          - "--exclude=Dockerfile*"
+
+    # 6. Build process
+    - name: Install frontend dependencies
+      npm:
+        path: "{{ frontend_path }}"
+        state: present
+
+    - name: Execute frontend build
+      command: npm run build
+      args:
+        chdir: "{{ frontend_path }}"
+      environment:
+        VITE_APP_SERVER_URL: "{{ vite_app_server_url }}"
+        VITE_TURNSTILE_SITE_KEY: "{{ vite_turnstile_site_key }}"
+
+    - name: Ensure correct permissions after build
+      file:
+        path: "{{ frontend_path }}"
+        owner: "{{ web_user }}"
+        group: "{{ web_user }}"
+        recurse: yes
+        state: directory
+
+    # 7. Nginx configuration
+    - name: Remove default Nginx configuration
+      file:
+        path: "{{ nginx_default_conf }}"
+        state: absent
+
+    - name: Copy Nginx configuration from template
+      template:
+        src: nginx.conf.j2
+        dest: "{{ nginx_conf_file }}"
+      notify: reload nginx
+
+    - name: Create symlink for Ubuntu (Debian-style)
+      file:
+        src: "{{ nginx_conf_file }}"
+        dest: "{{ nginx_symlink }}"
+        state: link
+      when: ansible_facts['os_family'] == "Debian"
+      notify: reload nginx
+
+    - name: Set context for frontend files (SELinux for AlmaLinux)
+      sefcontext:
+        target: "{{ frontend_path }}/dist(/.*)?"
+        setype: httpd_sys_content_t
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Apply context to filesystem (SELinux for AlmaLinux)
+      command: restorecon -irv "{{ frontend_path }}/dist"
+      when: ansible_facts['os_family'] == "RedHat"
+      changed_when: false
+
+    - name: Ensure Nginx is running and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  tags:
+    - frontend

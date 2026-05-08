@@ -1,0 +1,14 @@
+---
+node_repo_setup: "curl -fsSL https://deb.nodesource.com/setup_20.x | bash -"
+
+needed_packages:
+  - nodejs
+  - nginx
+  - git
+  - rsync
+
+web_user: "www-data"
+
+nginx_symlink: "/etc/nginx/sites-enabled/ecommerce"
+nginx_default_conf: "/etc/nginx/sites-enabled/default"
+nginx_conf_file: "/etc/nginx/sites-available/ecommerce"

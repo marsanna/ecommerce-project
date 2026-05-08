@@ -1,0 +1,52 @@
+---
+# 1. Load variables based on the OS (Fact check)
+- name: Load OS-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_facts['os_family'] }}.yml"
+    - "{{ ansible_facts['distribution'] }}.yml"
+  tags: always
+
+# 2. Prepare Node.js repository
+- name: Prepare Node.js repository
+  shell: "{{ node_repo_setup }}"
+  changed_when: false
+  tags: [backend, frontend]
+
+# 3. Install base packages
+- name: Install base packages
+  package:
+    name: "{{ needed_packages }}"
+    state: present
+    update_cache: yes
+  tags: [backend, frontend]
+
+# 4. Infrastructure setup
+- name: Create project directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: "{{ web_user }}"
+    mode: "0755"
+  with_items:
+    - "{{ project_root }}"
+    - "{{ backend_path }}"
+    - "{{ frontend_path }}"
+  tags: [backend, frontend]
+
+- name: Allow Nginx network connect (SELinux for AlmaLinux)
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+  when: ansible_facts['os_family'] == "RedHat"
+  tags: [backend, frontend]
+
+- name: Load backend tasks
+  include_tasks: backend_tasks.yml
+  tags: backend
+
+- name: Load frontend tasks
+  include_tasks: frontend_tasks.yml
+  tags: frontend

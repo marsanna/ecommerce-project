@@ -1,0 +1,21 @@
+---
+project_root: "/var/www/ecommerce"
+backend_path: "/var/www/ecommerce/backend"
+frontend_path: "/var/www/ecommerce/frontend"
+backend_port: 9999
+frontend_port: 80
+local_code_path: "{{ playbook_dir }}/.."
+vagrant_keys_path: "{{ playbook_dir }}/../../../../vagrant/.vagrant/machines"
+
+access_jwt_secret: "{{ lookup('ini', 'ACCESS_JWT_SECRET type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+db_name: "{{ lookup('ini', 'DB_NAME type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+client_base_url: "{{ lookup('ini', 'CLIENT_BASE_URL type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+mongo_uri: "{{ lookup('ini', 'MONGO_URI type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+refresh_token_ttl: 2592000
+salt_rounds: 10
+contact_receiver_email: "{{ lookup('ini', 'CONTACT_RECEIVER_EMAIL type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+resend_api_key: "{{ lookup('ini', 'RESEND_API_KEY type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+turnstile_secret_key: "{{ lookup('ini', 'TURNSTILE_SECRET_KEY type=properties file=' + playbook_dir + '/../backend/.env.production.local') }}"
+
+vite_app_server_url: "{{ lookup('ini', 'VITE_APP_SERVER_URL type=properties file=' + playbook_dir + '/../frontend/.env.production.local') }}"
+vite_turnstile_site_key: "{{ lookup('ini', 'VITE_TURNSTILE_SITE_KEY type=properties file=' + playbook_dir + '/../frontend/.env.production.local') }}"

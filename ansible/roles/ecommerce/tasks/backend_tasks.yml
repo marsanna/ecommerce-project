@@ -1,0 +1,55 @@
+---
+- name: Backend implementation block
+  block:
+    # 5. Code transfer (Synchronize)
+    - name: Transfer backend code
+      synchronize:
+        src: "{{ local_code_path }}/backend/"
+        dest: "{{ backend_path }}"
+        delete: yes
+        recursive: yes
+        rsync_opts:
+          - "--exclude=.gitignore"
+          - "--exclude=.prettierrc"
+          - "--exclude=.env*"
+          - "--exclude=.git"
+          - "--exclude=.dockerignore"
+          - "--exclude=node_modules"
+          - "--exclude=dist"
+          - "--exclude=Dockerfile*"
+
+    # 6. Build process
+    - name: Install backend dependencies
+      npm:
+        path: "{{ backend_path }}"
+        state: present
+
+    - name: Execute backend build
+      command: npm run build
+      args:
+        chdir: "{{ backend_path }}"
+
+    - name: Ensure correct permissions after build
+      file:
+        path: "{{ backend_path }}"
+        owner: "{{ web_user }}"
+        group: "{{ web_user }}"
+        recurse: yes
+        state: directory
+
+    # 7. Backend service configuration
+    - name: Create backend systemd service file
+      template:
+        src: backend.service.j2
+        dest: /etc/systemd/system/ecommerce-backend.service
+      notify: restart backend service
+
+    - name: Enable and start backend service
+      systemd:
+        name: ecommerce-backend
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+  tags:
+    - backend

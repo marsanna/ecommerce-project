@@ -1,0 +1,19 @@
+all:
+  hosts:
+    ubuntu_server:
+      ansible_host: 127.0.0.1
+      ansible_port: 2222
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: "{{ vagrant_keys_path }}/ubuntu_server/virtualbox/private_key"
+
+    almalinux_server:
+      ansible_host: 127.0.0.1
+      ansible_port: 2224
+      ansible_user: vagrant
+      ansible_ssh_private_key_file: "{{ vagrant_keys_path }}/almalinux_server/virtualbox/private_key"
+
+  children:
+    web_servers:
+      hosts:
+        ubuntu_server:
+        almalinux_server:

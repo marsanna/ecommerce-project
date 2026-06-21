@@ -1,16 +1,10 @@
-import type { Contact } from "../types.ts";
+import { API_URL } from "../config";
+import type { Contact } from "../types";
 
-const API_URL: string | undefined = import.meta.env.VITE_APP_SERVER_URL as
-  | string
-  | undefined;
-if (!API_URL)
-  throw new Error("API URL is required, are you missing a .env file?");
-const baseURL: string = `${API_URL}/contact`;
-
-export const sendContactMessage = async (
+export const sendContactEmail = async (
   formData: Contact,
-): Promise<{ success: boolean }> => {
-  const res = await fetch(baseURL, {
+): Promise<{ success: true }> => {
+  const res = await fetch(`${API_URL}/contact`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +14,7 @@ export const sendContactMessage = async (
 
   if (!res.ok) {
     const error = await res.json().catch(() => null);
-    throw new Error(error?.message || "Failed to send a message");
+    throw new Error(error?.message || "Failed to send message");
   }
 
   return await res.json();

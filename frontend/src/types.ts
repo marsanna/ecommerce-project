@@ -1,3 +1,6 @@
+export type TurnstileSize = "normal" | "compact";
+export type TurnstileTheme = "light" | "dark" | "auto";
+
 export type User = {
   id: string;
   email: string;
@@ -23,10 +26,11 @@ export type ContactForm = {
 
 export interface TurnstileOptions {
   sitekey: string;
-  callback?: (token: string) => void;
+  size?: TurnstileSize;
+  theme?: TurnstileTheme;
   "error-callback"?: () => void;
   "expired-callback"?: () => void;
-  theme?: "light" | "dark" | "auto";
+  callback?: (token: string) => void;
 }
 
 export interface TurnstileInstance {
@@ -34,8 +38,8 @@ export interface TurnstileInstance {
     container: string | HTMLElement,
     options: TurnstileOptions,
   ) => string;
-  remove: (widgetId: string) => void;
   reset: (widgetId: string) => void;
+  remove: (widgetId: string) => void;
   getResponse: (widgetId: string) => string;
 }
 

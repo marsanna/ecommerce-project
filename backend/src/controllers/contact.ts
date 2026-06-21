@@ -1,7 +1,9 @@
+import { CONTACT_RECEIVER_EMAIL, TURNSTILE_SECRET_KEY } from "#config";
 import { contactSchema } from "#schemas";
-import { type RequestHandler, type Response } from "express";
-import { Resend } from "resend";
+import { type RequestHandler } from "express";
 import { z } from "zod/v4";
+
+import { sendEmail } from "../utils/email.ts";
 
 interface TurnstileResult {
   success: boolean;
@@ -10,15 +12,30 @@ interface TurnstileResult {
 
 export type contactDTO = z.infer<typeof contactSchema>;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const sendContactEmail: RequestHandler<
   {},
-  { success: boolean } | { error: string },
+  { success: boolean } | { message: string },
   contactDTO
 > = async (req, res, next): Promise<void> => {
   try {
-    const { name, email, subject, message, turnstileToken } = req.body;
+    if (!TURNSTILE_SECRET_KEY) {
+      console.error("TURNSTILE_SECRET_KEY is not defined.");
+      res.status(500).json({
+        message: "Contact form is unavailable. Please try again.",
+      });
+      return;
+    }
+
+    if (!CONTACT_RECEIVER_EMAIL) {
+      console.error("CONTACT_RECEIVER_EMAIL is not defined.");
+      res.status(500).json({
+        message: "Contact form is unavailable. Please try again.",
+      });
+      return;
+    }
+
+    const { name, email, subject, message, turnstileToken } =
+      req.body as contactDTO;
 
     const verifyUrl =
       "https://challenges.cloudflare.com/turnstile/v0/siteverify";
@@ -29,59 +46,40 @@ export const sendContactEmail: RequestHandler<
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        secret: process.env.TURNSTILE_SECRET_KEY || "",
         response: turnstileToken || "",
+        secret: TURNSTILE_SECRET_KEY || "",
       }),
     });
 
     const outcome = (await turnstileResponse.json()) as TurnstileResult;
 
     if (!outcome.success) {
-      console.error("Turnstile verification failed:", outcome["error-codes"]);
+      console.error("Turnstile verification failed", outcome["error-codes"]);
       res.status(400).json({
-        success: false,
-        error: "Security check failed. Please try again.",
-      });
-      return;
-    }
-
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL;
-
-    if (!receiverEmail) {
-      console.error(
-        "Email sending failed: CONTACT_RECEIVER_EMAIL is not defined in environment variables.",
-      );
-      res.status(500).json({
-        success: false,
-        error: "Server configuration error. Please contact support.",
+        message: "Security check failed. Please try again.",
       });
       return;
     }
 
     const textMessage = `New Contact Form Submission\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`;
 
-    const { data, error } = await resend.emails.send({
-      from: "My Shop <onboarding@resend.dev>",
-      to: receiverEmail,
-      replyTo: email,
-      subject: `My Shop - ${subject.toUpperCase()}`,
-      text: textMessage,
-      //html: `...`
-    });
-    if (error) {
-      console.error("Resend API Error Details:", error);
-      res.status(400).json({
-        success: false,
-        error:
-          "Failed to send email. Please check the recipient address or try again later.",
+    try {
+      await sendEmail({
+        to: CONTACT_RECEIVER_EMAIL,
+        subject: `Ecommerce - ${subject}`,
+        text: textMessage,
+      });
+    } catch (error) {
+      console.error("Failed to send email", error);
+      res.status(500).json({
+        message: "Failed to send email. Please try again.",
       });
       return;
     }
-
     res.status(200).json({ success: true });
     return;
   } catch (error) {
-    console.error("Email service error:", error);
+    console.error("An unexpected error occurred", error);
     next(error);
   }
 };

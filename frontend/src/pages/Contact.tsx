@@ -1,9 +1,8 @@
 import { type ChangeEvent, useEffect, useRef, useState } from "react";
 
-import { sendContactMessage } from "../data/contact.ts";
-import type { ContactForm } from "../types.ts";
-
-const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+import { TURNSTILE_SITE_KEY } from "../config";
+import { sendContactEmail } from "../data/contact";
+import type { ContactForm } from "../types";
 
 const initialForm: ContactForm = {
   name: "",
@@ -12,44 +11,63 @@ const initialForm: ContactForm = {
   message: "",
 };
 
-export default function Contact() {
-  const [form, setForm] = useState<ContactForm>(initialForm);
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState("");
+export default function ContactForm() {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState<ContactForm>(initialForm);
+
+  const widgetId = useRef<string | null>(null);
+  const widgetRef = useRef<HTMLDivElement>(null);
   const [turnstileToken, setTurnstileToken] = useState<string>("");
 
-  const widgetRef = useRef<HTMLDivElement>(null);
-  const widgetId = useRef<string | null>(null);
-
   useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+
+    // Clean up any existing widget instance
+    if (widgetId.current && window.turnstile) {
+      window.turnstile.remove(widgetId.current);
+      widgetId.current = null;
+    }
+
+    // Ensure the target DOM element exists
     if (!widgetRef.current) return;
 
+    // Initialize and mount the widget
     const renderWidget = () => {
+      // Prevent duplicate rendering
       if (widgetId.current) return;
+
+      // Render the widget and save its unique instance ID
       if (window.turnstile && widgetRef.current) {
         widgetId.current = window.turnstile.render(widgetRef.current, {
-          sitekey: turnstileSiteKey,
+          sitekey: TURNSTILE_SITE_KEY,
+          // Handle successful verification
           callback: (token: string) => {
             setTurnstileToken(token);
             setError("");
           },
+          // Handle verification errors
           "error-callback": () => {
-            setError("Cloudflare Security Error. Please refresh.");
+            setError("Cloudflare security error. Please reload the page.");
             setTurnstileToken("");
           },
+          // Handle token timeouts
           "expired-callback": () => {
-            setError("Security token expired. Please verify again.");
+            setError("Security token expired. Please try to verify again.");
             setTurnstileToken("");
           },
           theme: "light",
+          size: window.innerWidth < 380 ? "compact" : "normal",
         });
       }
     };
 
+    // Initialize if the script is already loaded
     if (window.turnstile) {
       renderWidget();
     } else {
+      // Wait for the script tag to finish loading
       const script = document.querySelector(
         'script[src*="turnstile/v0/api.js"]',
       );
@@ -58,19 +76,27 @@ export default function Contact() {
       }
     }
 
+    // Cleanup automatically when the component unmounts
     return () => {
       const script = document.querySelector(
         'script[src*="turnstile/v0/api.js"]',
       );
+      // Remove event listener to free up browser memory
       if (script) {
         script.removeEventListener("load", renderWidget);
       }
+      // Destroy the widget instance from browser memory
       if (widgetId.current && window.turnstile) {
         window.turnstile.remove(widgetId.current);
         widgetId.current = null;
       }
     };
   }, []);
+
+  const setField = <K extends keyof ContactForm>(
+    key: K,
+    value: ContactForm[K],
+  ) => setForm((p) => ({ ...p, [key]: value }));
 
   const onChange =
     (key: keyof ContactForm) =>
@@ -79,7 +105,9 @@ export default function Contact() {
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
     ) => {
-      setForm((prev) => ({ ...prev, [key]: e.target.value }));
+      const value = e.target.value;
+
+      setField(key, value as ContactForm[typeof key]);
     };
 
   const canSubmit =
@@ -93,27 +121,25 @@ export default function Contact() {
     setError("");
     setSuccess("");
 
-    if (!canSubmit || !turnstileToken) {
-      setError("Please solve the security check.");
+    if (!turnstileToken) {
+      setError("Please complete the security check.");
       return;
     }
 
     try {
       setSubmitting(true);
-      await sendContactMessage({ ...form, turnstileToken });
+
+      await sendContactEmail({ ...form, turnstileToken });
+
       setSuccess("Thank you! Your message has been sent.");
       setForm(initialForm);
 
-      if (widgetId.current) {
+      if (widgetId.current && window.turnstile) {
         window.turnstile.reset(widgetId.current);
       }
       setTurnstileToken("");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to send a message");
-      if (widgetId.current) {
-        window.turnstile.reset(widgetId.current);
-        setTurnstileToken("");
-      }
     } finally {
       setSubmitting(false);
     }

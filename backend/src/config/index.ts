@@ -13,6 +13,7 @@ const envSchema = z.object({
     .min(64),
   CLIENT_BASE_URL: z.url().default("http://localhost:5173"),
   RESEND_API_KEY: z.string(),
+  RESEND_SENDER_EMAIL: z.string(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
   CONTACT_RECEIVER_EMAIL: z.string().optional(),
 });
@@ -35,6 +36,7 @@ export const {
   ACCESS_JWT_SECRET,
   CLIENT_BASE_URL,
   RESEND_API_KEY,
-  CONTACT_RECEIVER_EMAIL,
+  RESEND_SENDER_EMAIL,
   TURNSTILE_SECRET_KEY,
+  CONTACT_RECEIVER_EMAIL,
 } = parsedEnv.data;

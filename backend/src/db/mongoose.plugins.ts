@@ -1,4 +1,4 @@
-import { Document, Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 interface CleanResponseOptions {
   remove?: string[];
@@ -10,7 +10,7 @@ export function cleanResponse(
 ) {
   const { remove = [] } = options;
 
-  function transform(_doc: Document, ret: Record<string, any>) {
+  const transform: any = (_doc: never, ret: Record<string, any>) => {
     ret.id = ret._id;
     delete ret._id;
     delete ret.__v;
@@ -23,7 +23,7 @@ export function cleanResponse(
     if (ret.updatedAt) ret.updatedAt = String(ret.updatedAt);
 
     return ret;
-  }
+  };
 
   schema.set("toJSON", { transform });
   schema.set("toObject", { transform });
